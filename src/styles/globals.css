@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind typography;
+
+:root {
+  --brand-primary: #ED1B2F;
+  --brand-secondary: #ED0973;
+  --brand-accent: #B624C0;
+  --brand-light: #FF6B9D;
+  --brand-dark: #C41E3A;
+  --brand-purple-light: #D946EF;
+  --brand-purple-dark: #9333EA;
+  --vh: 1vh;
+  --full-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --full-height: 100dvh;
+  }
+}
+
+.h-screen-safe {
+  height: var(--full-height);
+  min-height: var(--full-height);
+}
+
+.min-h-screen-safe {
+  min-height: var(--full-height);
+}
+
+@media (max-width: 768px) {
+  .mobile-viewport-fix {
+    height: var(--full-height);
+    max-height: var(--full-height);
+    overflow: hidden;
+  }
+  .mobile-viewport-fix .flex-col {
+    height: 100%;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl shadow-lg;
+  }
+  .game-gradient {
+    @apply bg-gradient-to-br from-red-600 via-pink-600 to-purple-600;
+  }
+  .btn-primary {
+    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  .tab-active {
+    @apply bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-inner shadow-black/30;
+  }
+  .tab-inactive {
+    @apply bg-white text-gray-800 hover:bg-gray-100 shadow-md hover:shadow-lg transition-all duration-200;
+  }
+  .header-logo {
+    @apply flex items-center space-x-2 cursor-pointer hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200;
+  }
+  .header-logo-icon {
+    @apply text-2xl transition-transform duration-200;
+  }
+  .header-logo-text {
+    @apply text-white font-bold text-lg hidden sm:block;
+  }
+  .game-title-badge {
+    @apply flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg;
+  }
+  .phase-indicator {
+    @apply bg-white/20 px-3 py-1 rounded-full;
+  }
+  .phase-current {
+    @apply text-yellow-300 font-bold;
+  }
+  .phase-separator {
+    @apply text-white/60 mx-1;
+  }
+  .phase-total {
+    @apply text-white/80;
+  }
+  .header-glass {
+    @apply bg-white/10 backdrop-blur-sm border-b border-white/20 shadow-lg;
+  }
+  .fade-in {
+    @apply animate-in fade-in duration-300;
+  }
+  .slide-in-bottom {
+    @apply animate-in slide-in-from-bottom-4 duration-300;
+  }
+}
+
+@layer utilities {
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+/* ===== BLOCKLY CUSTOMIZATIONS ===== */
+.blocklyScrollbarVertical,
+.blocklyScrollbarHorizontal,
+.blocklyToolboxDiv .blocklyScrollbarVertical,
+.blocklyToolboxDiv .blocklyScrollbarHorizontal,
+.blocklyFlyout .blocklyScrollbarVertical,
+.blocklyFlyout .blocklyScrollbarHorizontal,
+.blocklyWorkspace .blocklyScrollbarVertical,
+.blocklyWorkspace .blocklyScrollbarHorizontal,
+.blocklyDiv .blocklyScrollbarVertical,
+.blocklyDiv .blocklyScrollbarHorizontal,
+.blocklyDiv * .blocklyScrollbarVertical,
+.blocklyDiv * .blocklyScrollbarHorizontal,
+.blocklyScrollbarHandle,
+.blocklyScrollbarKnob,
+.blocklyScrollbarBackground,
+div[class*="blockly"] .blocklyScrollbarVertical,
+div[class*="blockly"] .blocklyScrollbarHorizontal,
+svg[class*="blockly"] .blocklyScrollbarVertical,
+svg[class*="blockly"] .blocklyScrollbarHorizontal {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.blocklyWorkspace,
+.blocklyWorkspace svg,
+.blocklyToolboxDiv,
+.blocklyToolboxDiv *,
+.blocklyFlyout,
+.blocklyFlyout *,
+.blocklyDiv,
+.blocklyDiv *,
+.blocklyMainBackground,
+.blocklyTreeRoot {
+  overflow: hidden !important;
+}
+
+.blocklyDiv {
+  background-color: #f8f9fa;
+  min-height: 200px;
+}
+
+.blocklyDiv .blocklyWorkspace {
+  background-color: #f8f9fa !important;
+}
+
+.blocklyDiv .blocklyFlyout,
+.blocklyDiv .blocklyToolboxDiv {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.blocklyDiv:empty {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+#confetti {
+  z-index: 99999 !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
