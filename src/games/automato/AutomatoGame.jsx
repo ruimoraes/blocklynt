@@ -48,10 +48,12 @@ export default function AutomatoGame() {
     <GameBase
       gameFactory={createGame}
       gameConfig={gameConfig}
-      editor={({ faseAtual }) => (
+      editor={(props) => (
         <GameEditor onExecutar={handleExecutar}>
           <BlocklyEditor
-            toolboxJson={generateDynamicToolbox(faseAtual.allowedBlocks)}
+            toolboxJson={generateDynamicToolbox(props.faseAtual.allowedBlocks)}
+            onWorkspaceChange={props.onWorkspaceChange}
+            maxBlocks={props.faseAtual.maxBlocks}
             ref={workspaceRef}
           />
         </GameEditor>
