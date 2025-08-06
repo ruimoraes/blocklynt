@@ -197,3 +197,27 @@ svg[class*="blockly"] .blocklyScrollbarHorizontal {
   width: 100% !important;
   height: 100% !important;
 }
+
+#visualization {
+  position: relative;
+}
+
+#capacityBubble {
+  position: absolute;
+  margin-top: -0.5em;
+  left: 10px;
+  bottom: 10px;
+  z-index: 10;
+}
+
+#capacity {
+  display: none;
+  color: #fff;
+  padding: 5px 1em;
+  border-radius: 15px;
+  background-color: rgba(64,64,64,.7);
+  font-size: large;
+}
+.capacityNumber {
+  font-weight: bold;
+}

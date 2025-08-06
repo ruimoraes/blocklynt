@@ -3,7 +3,7 @@ import { useGameState, GAME_STATES } from '../../contexts/GameStateContext';
 import { gameEventBus } from '../../utils/gameEvents';
 import ConfettiOverlay from './ConfettiOverlay';
 
-export default function GameArea({ children }) {
+export default function GameArea({ children, blocosRestantes = null }) {
   const { 
     estadoExecucao, 
     codigoGerado,
@@ -55,8 +55,19 @@ export default function GameArea({ children }) {
     <div 
       className="w-full h-full overflow-hidden relative flex items-center justify-center game-area-container" 
       style={{ backgroundColor: "#F1EEE7" }}
+      id="visualization"
     >
       <ConfettiOverlay isActive={showConfetti} />
+      
+      {/* Indicador de blocos restantes */}
+      {blocosRestantes !== null && (
+        <div id="capacityBubble">
+          <div id="capacity" style={{ display: 'block' }}>
+            Blocos restantes: <span className="capacityNumber">{blocosRestantes}</span>
+          </div>
+        </div>
+      )}
+      
       <div className="flex items-center justify-center w-full h-full phaser-container">
         {children}
       </div>

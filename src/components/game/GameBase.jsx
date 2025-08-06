@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import Phaser from "phaser";
 import { Panel, PanelGroup } from "react-resizable-panels";
 import GameNavBar from "./GameNavBar";
@@ -19,6 +19,7 @@ function GameBaseContent({ gameFactory, gameConfig, editor }) {
   const isMobile = useIsMobile();
   const [modalFasesAberto, setModalFasesAberto] = useState(false);
   const [modalSucessoAberto, setModalSucessoAberto] = useState(false);
+  const [blocosRestantesCount, setBlocosRestantesCount] = useState(null);
 
   const {
     faseAtual,
@@ -142,6 +143,18 @@ function GameBaseContent({ gameFactory, gameConfig, editor }) {
     return codigoLimpo || codigo;
   }, [codigoGerado]);
 
+  const handleWorkspaceChange = useCallback((blockCount) => {
+    if (currentPhase.maxBlocks === Infinity) {
+      setBlocosRestantesCount(null);
+      return;
+    }
+
+    // Usar a contagem que vem do BlocklyEditor
+    const blocosUsados = typeof blockCount === 'number' ? blockCount : 0;
+    const blocosRestantes = currentPhase.maxBlocks - blocosUsados;
+    setBlocosRestantesCount(blocosRestantes);
+  }, [currentPhase.maxBlocks]);
+
   return (
     <div className="game-base-page flex flex-col h-screen w-screen">
       <GameNavBar title={`${gameConfig.gameName}`} />
@@ -154,13 +167,22 @@ function GameBaseContent({ gameFactory, gameConfig, editor }) {
           <Panel defaultSize={isMobile ? 50 : 50} minSize={isMobile ? 50 : 50}>
             <EditorProvider gameConfig={gameConfig} faseAtual={faseAtual}>
               {typeof editor === "function"
-                ? editor({ faseAtual: currentPhase, faseAtualIndex: faseAtual })
+                ? (() => {
+                    
+                    const editorProps = { 
+                      faseAtual: currentPhase,
+                      faseAtualIndex: faseAtual,
+                      onWorkspaceChange: handleWorkspaceChange 
+                    };
+
+                    return editor(editorProps);
+                  })()
                 : editor}
             </EditorProvider>
           </Panel>
           <ResizeHandle direction={isMobile ? "vertical" : "horizontal"} />
           <Panel defaultSize={isMobile ? 50 : 50} minSize={isMobile ? 10 : 10}>
-            <GameArea>
+            <GameArea blocosRestantes={blocosRestantesCount}>
               <div ref={gameContainerRef} className="w-full h-full" />
             </GameArea>
           </Panel>

@@ -6,19 +6,59 @@ import './custom_category';
 import './BlocklyEditor.mobile.css';
 
 const BlocklyEditor = forwardRef(function BlocklyEditor({
-  toolboxJson, 
-  onWorkspaceChange 
-}, ref) {  
+  toolboxJson,
+  onWorkspaceChange,
+  maxBlocks = Infinity
+}, ref) {
   const { gameNameKey } = useEditor();
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
   const [initialJson, setInitialJson] = useState(null);
   const isInitializedRef = useRef(false);
+  const [currentBlockCount, setCurrentBlockCount] = useState(0);
 
   const stableToolboxJson = useMemo(() => toolboxJson, [JSON.stringify(toolboxJson)]);
-  const stableOnWorkspaceChange = useCallback(onWorkspaceChange || (() => {}), [onWorkspaceChange]);
-  
-  useEffect(() => {    
+
+  const isBlockLimitReached = useMemo(() => {
+    if (maxBlocks === Infinity) return false;
+
+    return maxBlocks <= currentBlockCount;
+  }, [currentBlockCount, maxBlocks]);
+
+  const workspaceChange = useCallback(() => {
+    if (!workspaceRef.current) return;
+
+    const allBlocks = workspaceRef.current.getAllBlocks();
+    const blockCount = allBlocks.length;
+    setCurrentBlockCount(blockCount);
+
+    if (onWorkspaceChange) {
+      onWorkspaceChange(blockCount);
+    }
+  }, [onWorkspaceChange]);
+
+  const updateCategoriesState = useCallback(() => {
+    if (!workspaceRef.current) return;
+
+    const toolbox = workspaceRef.current.getToolbox();
+    if (!toolbox) return;
+
+    const categories = toolbox.getToolboxItems();
+
+    categories.forEach(category => {
+      if (isBlockLimitReached) {
+        category.setDisabled(true);
+      } else {
+        category.setDisabled(false);
+      }
+    });
+  }, [isBlockLimitReached]);
+
+  useEffect(() => {
+    updateCategoriesState();
+  }, [updateCategoriesState]);
+
+  useEffect(() => {
     const saved = localStorage.getItem(gameNameKey);
     if (saved) {
       try {
@@ -36,11 +76,7 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
   useImperativeHandle(ref, () => workspaceRef.current, []);
 
   useEffect(() => {
-    if (isInitializedRef.current) {
-      return;
-    }
-
-    if (!blocklyDiv.current) {
+    if (isInitializedRef.current || !blocklyDiv.current) {
       return;
     }
 
@@ -74,11 +110,9 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
         controls: false,
         wheel: false,
         startScale: 0.7,
-        
       },
     });
 
-    // Carregar blocos salvos se existirem
     if (initialJson) {
       try {
         Blockly.serialization.workspaces.load(initialJson, workspaceRef.current);
@@ -86,6 +120,13 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
         console.error("Erro ao carregar blocos:", error);
         workspaceRef.current.clear();
       }
+    }
+
+    const initialBlockCount = workspaceRef.current.getAllBlocks().length;
+    setCurrentBlockCount(initialBlockCount);
+
+    if (onWorkspaceChange) {
+      onWorkspaceChange(initialBlockCount);
     }
 
     // Configurar ref externa
@@ -97,13 +138,32 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
       }
     }
 
-    // Listener para salvar mudanças
-    const listener = () => {
+    const listener = (event) => {
       if (!workspaceRef.current) return;
-      
+
+      if (event.type === Blockly.Events.BLOCK_CREATE) {
+        const currentCount = workspaceRef.current.getAllBlocks().length;
+
+        // Se excedeu o limite, remover o bloco criado
+        if (maxBlocks !== Infinity && currentCount > maxBlocks) {
+          console.log('🚫 Limite de blocos excedido na duplicação, removendo bloco:', event.blockId);
+
+          const blockToRemove = workspaceRef.current.getBlockById(event.blockId);
+          if (blockToRemove) {
+            Blockly.Events.disable();
+            blockToRemove.dispose(false);
+            Blockly.Events.enable();
+
+            return;
+          }
+        }
+      }
+
+
       const json = Blockly.serialization.workspaces.save(workspaceRef.current);
       localStorage.setItem(gameNameKey, JSON.stringify(json));
-      stableOnWorkspaceChange(json);
+
+      workspaceChange();
     };
 
     workspaceRef.current.addChangeListener(listener);
@@ -115,7 +175,19 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
     });
     observer.observe(blocklyDiv.current);
 
-    return () => {      
+    // Configurar estado inicial das categorias e estilo
+    setTimeout(() => {
+      updateCategoriesState();
+
+      // Remover background do toolbox
+      const bg = document.querySelector('.blocklyToolboxBackground');
+      if (bg) {
+        bg.setAttribute('fill', 'none');
+        bg.setAttribute('stroke', 'none');
+      }
+    }, 100);
+
+    return () => {
       if (ref) {
         if (typeof ref === 'function') {
           ref(null);
@@ -123,7 +195,7 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
           ref.current = null;
         }
       }
-      
+
       if (workspaceRef.current) {
         try {
           workspaceRef.current.dispose();
@@ -132,27 +204,13 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
         }
         workspaceRef.current = null;
       }
-      
+
       observer.disconnect();
       isInitializedRef.current = false;
     };
-  }, [gameNameKey, stableToolboxJson, initialJson, stableOnWorkspaceChange, ref]);
+  }, [gameNameKey, stableToolboxJson, initialJson]);
 
-  useEffect(() => {
-    return () => {
-      isInitializedRef.current = false;
-    };
-  }, [gameNameKey]);
-
-  setTimeout(() => {
-  const bg = document.querySelector('.blocklyToolboxBackground');
-  if (bg) {
-    bg.setAttribute('fill', 'none');
-    bg.setAttribute('stroke', 'none');
-  }
-}, 0);
-
-  return (    
+  return (
     <div ref={blocklyDiv} className="w-full h-full" />
   );
 });
