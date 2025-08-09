@@ -28,6 +28,10 @@ class GameEventBus extends EventTarget {
   gameReady() {
     this.dispatchEvent(new CustomEvent('gameReady'));
   }
+
+  stopExecution() {
+    this.dispatchEvent(new CustomEvent('stopExecution'));
+  }
 }
 
 export const gameEventBus = new GameEventBus();

@@ -164,7 +164,7 @@ function GameBaseContent({ gameFactory, gameConfig, editor }) {
           direction={isMobile ? "vertical" : "horizontal"}
           className="h-full w-full"
         >
-          <Panel defaultSize={isMobile ? 50 : 50} minSize={isMobile ? 50 : 50}>
+          <Panel defaultSize={isMobile ? 50 : 50} minSize={isMobile ? 10 : 10}>
             <EditorProvider gameConfig={gameConfig} faseAtual={faseAtual}>
               {typeof editor === "function"
                 ? (() => {
