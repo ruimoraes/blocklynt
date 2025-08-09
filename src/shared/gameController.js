@@ -18,16 +18,29 @@ export function setupGameController(scene, {
     onReset.call(scene);
   };
 
+  const stopExecutionHandler = () => {
+    if (scene.gameInterpreter) {
+      scene.gameInterpreter.stop();
+    }
+    if (scene.workspace) {
+      scene.workspace.highlightBlock(null);
+    }
+  }  
+
   gameEventBus.addEventListener('executeCode', executeCodeHandler);
   gameEventBus.addEventListener('resetGame', resetGameHandler);
+  gameEventBus.addEventListener('stopExecution', stopExecutionHandler);
+
 
   const cleanup = () => {
     gameEventBus.removeEventListener('executeCode', executeCodeHandler);
     gameEventBus.removeEventListener('resetGame', resetGameHandler);
+    gameEventBus.removeEventListener('stopExecution', stopExecutionHandler);
   };
 
   scene._cleanupController = cleanup;
   scene.events.on('destroy', cleanup);
+
 
   gameEventBus.gameReady();
 }

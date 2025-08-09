@@ -90,7 +90,12 @@ export function GameStateProvider({ children, gameConfig }) {
     setFaseAtual(numeroFase);
     setEstadoExecucao(GAME_STATES.PARADO);
     setCodigoGerado('');
-  };  
+  };
+
+  const parar = () => {
+    setEstadoExecucao(GAME_STATES.PARADO);
+    setCodigoGerado('');
+  };
 
   return (
     <GameStateContext.Provider value={{
@@ -100,6 +105,7 @@ export function GameStateProvider({ children, gameConfig }) {
       finalizarComSucesso,
       finalizarComFalha,
       reiniciar,
+      parar,
       faseAtual,
       setFaseAtual: mudarFase,
       fasesConcluidas,

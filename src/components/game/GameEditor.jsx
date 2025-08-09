@@ -1,5 +1,6 @@
 import { Play, Loader, RotateCcw } from "lucide-react";
 import { useGameState, GAME_STATES } from "../../contexts/GameStateContext";
+import { gameEventBus } from "../../utils/gameEvents";
 
 export default function GameEditor({ 
   children, 
@@ -7,13 +8,17 @@ export default function GameEditor({
   textoExecutar = "Executar", 
   textoReiniciar = "Reiniciar" 
  }) {
-  const { estadoExecucao, executar, reiniciar } = useGameState();
+  const { estadoExecucao, executar, reiniciar, parar } = useGameState();
 
   const isExecutando = estadoExecucao === GAME_STATES.EXECUTANDO;
   const precisaReiniciar = estadoExecucao === GAME_STATES.SUCESSO || estadoExecucao === GAME_STATES.FALHA;
 
   const handleClick = () => {
-    if (isExecutando) return;
+    if (isExecutando) {
+      gameEventBus.stopExecution();
+      parar();
+      return;
+    }
     
     if (precisaReiniciar) {
       reiniciar();
@@ -29,10 +34,10 @@ export default function GameEditor({
         {/* Informações dos blocos podem ser exibidas aqui */}
         <button
           onClick={handleClick}
-          disabled={isExecutando}
+          // disabled={isExecutando}
           className={`game-controls-custom flex items-center space-x-2 px-6 py-3 rounded-full font-medium transition-all duration-200 shadow-md ${
             isExecutando
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              ? "bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 text-white"
               : precisaReiniciar
               ? "bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
               : "bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 hover:from-red-600 hover:via-pink-600 hover:to-purple-700 text-white"
@@ -41,7 +46,7 @@ export default function GameEditor({
           {isExecutando ? (
             <>
               <Loader className="w-4 h-4 animate-spin" />
-              <span>Executando...</span>
+              <span>Executando, clique para interromper...</span>
             </>
           ) : precisaReiniciar ? (
             <>

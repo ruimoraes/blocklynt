@@ -9,6 +9,7 @@ export class GameInterpreter {
     this.interpreter = null;
     this.isRunning = false;
     this.shouldStop = false;
+    this.stoppedByUser = false;
     this.pause = 0;
   }
 
@@ -42,6 +43,7 @@ export class GameInterpreter {
 
   stop() {
     this.shouldStop = true;
+    this.stoppedByUser = true;
   }
 
   setPause(pauseValue) {
@@ -59,7 +61,7 @@ export class GameInterpreter {
         
         do {
           if (this.shouldStop) {
-            resolve('stopped');
+            resolve(this.stoppedByUser ? 'stopped_by_user' : 'stopped');
             return;
           }
           stepCount++;

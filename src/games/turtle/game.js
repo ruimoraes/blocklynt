@@ -478,7 +478,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
 
       this.solutionGraphics = this.add.graphics();
       this.playerGraphics = this.add.graphics();
-      this.solutionGraphics.setAlpha(0.1);
+      this.solutionGraphics.setAlpha(0.3);
       this.validationGraphics = this.add.graphics().setVisible(false);
       this.playerRT = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height).setVisible(false);
       this.validationRT = this.add.renderTexture(0, 0, this.game.config.width, this.game.config.height).setVisible(false);
@@ -529,6 +529,10 @@ export const createGame = (parentElement, configFaseAtual) => ({
 
           if (this.workspace)
             this.workspace.highlightBlock(null);
+
+          if (result !== 'stopped_by_user') {
+            this.handleExecutionResult(result);
+          }
 
           this.handleExecutionResult(result);
         } catch (error) {
