@@ -167,24 +167,6 @@ export const gameConfig = {
     },
     {
       id: 10,
-      nome: 'Labirinto Avançado II',
-      descricao: 'Desafie-se com novos caminhos e becos sem saída!',
-      maxBlocks: 10,
-      startPosition: { x: 6, y: 6 },
-      allowedBlocks: ['moveForward', 'turnLeft', 'turnRight', 'automato_repeat_until_goal', 'automato_if', 'automato_ifElse'],
-      mapa: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 1, 3, 0],
-        [0, 1, 0, 1, 0, 1, 1, 0],
-        [0, 1, 0, 1, 1, 1, 0, 0],
-        [0, 1, 1, 0, 0, 1, 0, 0],
-        [0, 0, 1, 1, 0, 1, 0, 0],
-        [0, 2, 1, 0, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    },
-    {
-      id: 11,
       nome: 'Desafio Final',
       descricao: 'O último desafio - use tudo que aprendeu!',
       maxBlocks: 10,
@@ -198,81 +180,9 @@ export const gameConfig = {
         [0, 1, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 1, 0, 0, 1, 0],
         [0, 2, 1, 1, 1, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    },
-    {
-      id: 12,
-      nome: 'Desafio Final II',
-      descricao: 'O último desafio - caminho alternativo!',
-      maxBlocks: 10,
-      startPosition: { x: 6, y: 6 },
-      allowedBlocks: ['moveForward', 'turnLeft', 'turnRight', 'automato_repeat_until_goal', 'automato_if', 'automato_ifElse'],
-      mapa: [
         [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 1, 3, 0],
-        [0, 1, 0, 1, 0, 1, 1, 0],
-        [0, 1, 0, 1, 1, 1, 0, 0],
-        [0, 1, 1, 0, 0, 1, 0, 0],
-        [0, 0, 1, 1, 0, 1, 0, 0],
-        [0, 2, 1, 0, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
       ]
-    },
-    {
-      id: 13,
-      nome: 'Desafio Final III',
-      descricao: 'O labirinto mais complexo até agora!',
-      maxBlocks: 10,
-      startPosition: { x: 1, y: 6 },
-      allowedBlocks: ['moveForward', 'turnLeft', 'turnRight', 'automato_repeat_until_goal', 'automato_if', 'automato_ifElse'],
-      mapa: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 1, 1, 1, 3, 0],
-        [0, 1, 0, 1, 0, 0, 1, 0],
-        [0, 1, 1, 1, 0, 1, 1, 0],
-        [0, 0, 0, 1, 0, 1, 0, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0],
-        [0, 2, 0, 0, 0, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    },
-    {
-      id: 14,
-      nome: 'Labirinto Avançado III',
-      descricao: 'Mais voltas, mais becos, mais desafio!',
-      maxBlocks: 10,
-      startPosition: { x: 6, y: 6 },
-      allowedBlocks: ['moveForward', 'turnLeft', 'turnRight', 'automato_repeat_until_goal', 'automato_if', 'automato_ifElse'],
-      mapa: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 1, 1, 3, 0],
-        [0, 1, 0, 0, 0, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 1, 0, 1, 0, 0],
-        [0, 1, 1, 1, 0, 1, 0, 0],
-        [0, 2, 0, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    },
-    {
-      id: 15,
-      nome: 'Labirinto Avançado IV',
-      descricao: 'Desafie-se sem if/else, só lógica e repetição!',
-      maxBlocks: 8,
-      startPosition: { x: 6, y: 6 },
-      allowedBlocks: ['moveForward', 'turnLeft', 'turnRight', 'automato_repeat_until_goal', 'automato_if'],
-      mapa: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 1, 3, 0],
-        [0, 1, 0, 1, 0, 1, 1, 0],
-        [0, 1, 0, 1, 1, 1, 0, 0],
-        [0, 1, 1, 0, 0, 1, 0, 0],
-        [0, 0, 1, 1, 0, 1, 0, 0],
-        [0, 2, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    },
+    }
   ],
 
   SquareType: {

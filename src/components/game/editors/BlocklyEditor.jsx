@@ -90,6 +90,7 @@ const BlocklyEditor = forwardRef(function BlocklyEditor({
         if (cat.name === 'Repetição') icon = 'fa fa-refresh';
         if (cat.name === 'Lógica') icon = 'fa fa-code';
         if (cat.name === 'Sensores') icon = 'fa fa-eye';
+        if (cat.name === 'Cor') icon = 'fa fa-paint-brush';
         return { ...cat, 'css-icon': icon };
       }),
     };

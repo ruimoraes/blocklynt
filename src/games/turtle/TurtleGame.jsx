@@ -4,15 +4,15 @@ import GameEditor from "../../components/game/GameEditor";
 import BlocklyEditor from "../../components/game/editors/BlocklyEditor";
 import { createGame } from "./game";
 import { gameConfig } from "./config";
-import { registerAutomatoBlocks, generateDynamicToolbox } from './blocks';
+import { registerTurtleBlocks , turtleToolbox} from "./blocks";
 import { javascriptGenerator } from "blockly/javascript";
 import { validateBlocklyWorkspace } from "../../utils/blocklyValidation";
 
-export default function AutomatoGame() {
+export default function TurtleGame() {
   const workspaceRef = useRef(null);
 
   useEffect(() => {
-    registerAutomatoBlocks();
+    registerTurtleBlocks();
   }, []);
 
   const handleExecutar = (executarCallback) => {
@@ -27,21 +27,20 @@ export default function AutomatoGame() {
     });
 
     if (!validation.isValid) {
-      console.error("❌ Execução cancelada: workspace inválida");
+      console.error("Execução cancelada: workspace inválida");
       return;
-    }
+    }    
 
     const blocos = workspaceRef.current.getAllBlocks();
     
     if (blocos.length > 0) {
-      const codigo = javascriptGenerator.workspaceToCode(workspaceRef.current);            
+      const codigo = javascriptGenerator.workspaceToCode(workspaceRef.current);      
       executarCallback(codigo, workspaceRef.current);
     }
 
     if (validation.reEnableBlocks) {
       setTimeout(validation.reEnableBlocks, 100);
     }
-
   };
 
   return (
@@ -51,9 +50,7 @@ export default function AutomatoGame() {
       editor={(props) => (
         <GameEditor onExecutar={handleExecutar}>
           <BlocklyEditor
-            toolboxJson={generateDynamicToolbox(props.faseAtual.allowedBlocks)}
-            onWorkspaceChange={props.onWorkspaceChange}
-            maxBlocks={props.faseAtual.maxBlocks}
+            toolboxJson={turtleToolbox}
             ref={workspaceRef}
           />
         </GameEditor>

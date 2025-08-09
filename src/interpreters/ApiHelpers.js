@@ -11,18 +11,33 @@ export class ApiHelpers {
    * @returns {function} - Wrapper para o js-interpreter
    */
   static createActionWrapper(scene, methodName, animationDelay = 100) {
-    return (callback) => {
-      // Chama o método no scene
-      if (scene[methodName] && typeof scene[methodName] === 'function') {
-        scene[methodName]();
-      } else {
-        console.warn(`Method '${methodName}' not found in scene`);
+  return function(arg1, callback) {   
+    const realArg = typeof arg1 === 'object' && arg1.data !== undefined ? arg1.data : arg1;
+        
+    if (scene[methodName] && typeof scene[methodName] === 'function') {
+      try {
+        const result = scene[methodName](realArg);
+        
+        if (result && typeof result.then === 'function') {
+          result.then(() => {
+            setTimeout(callback, animationDelay);
+          }).catch((error) => {
+            console.error(`Error in ${methodName}:`, error);
+            setTimeout(callback, animationDelay);
+          });
+        } else {
+          setTimeout(callback, animationDelay);
+        }
+      } catch (error) {
+        console.error(`Error executing ${methodName}:`, error);
+        setTimeout(callback, animationDelay);
       }
-      
-      // Aguarda animação terminar antes de chamar callback
+    } else {
+      console.warn(`Method '${methodName}' not found in scene`);
       setTimeout(callback, animationDelay);
-    };
-  }
+    }
+  };
+}
 
   /**
    * Cria wrapper para condições do jogo (funções síncronas)
