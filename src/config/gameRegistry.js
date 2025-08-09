@@ -1,4 +1,5 @@
 import { gameConfig as AUTOMATO_GAME_CONFIG } from '../games/automato/config.js';
+import { gameConfig as TURTLE_GAME_CONFIG } from '../games/turtle/config.js';
 
 const enhanceGameConfig = (baseConfig, metadata) => ({
   ...baseConfig,
@@ -38,6 +39,38 @@ export const GAMES_REGISTRY = {
       version: '2.0.0'
     }
   }),
+  turtle: enhanceGameConfig(TURTLE_GAME_CONFIG, {
+    name: 'Tartaruga',
+    icon: '🐢',
+    description: 'Aprenda programação com uma tartaruga que desenha no papel',
+    category: 'Lógica',
+    difficulty: 'Iniciante',
+    estimatedTime: '15-30 min',
+    concepts: [
+      'Sequências',
+      'Loops/Repetição',
+      'Condicionais',
+      'Funções'
+    ],
+    route: '/games/turtle',
+    component: 'TurtleGame',
+    isActive: true,
+    enabled: true,
+    featured: true,
+    objectives: [
+      'Entender sequências de comandos',
+      'Usar loops para otimizar código',
+      'Aplicar condicionais para tomada de decisão',
+      'Resolver problemas de desenho'
+    ],
+    metadata: {
+      totalPhases: TURTLE_GAME_CONFIG.fases?.length || 15,
+      hasProgressTracking: true,
+      supportsMultipleUsers: false,
+      lastUpdated: '2025-08-03',
+      version: '2.0.0'
+    }
+  })
 };
 
 export const GAME_CATEGORIES = {

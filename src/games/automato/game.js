@@ -4,7 +4,6 @@ import { gameEventBus } from "../../utils/gameEvents";
 import { GameInterpreter } from '../../interpreters/GameInterpreter.js';
 import { setupAutomatoAPI } from './interpreterSetup.js';
 
-// Assets
 import tiles from './assets/tiles_pegman.png';
 import pegman from './assets/pegman.png';
 import marker from './assets/marker.png';
@@ -15,12 +14,6 @@ const PEGMAN_WIDTH = 49;
 const Direcao = { NORTE: 0, LESTE: 1, SUL: 2, OESTE: 3 };
 const VELOCIDADE_ANIMACAO = 200;
 
-/**
- * Cria e configura o jogo Automato
- * @param {HTMLElement} parentElement - Elemento pai para renderizar o jogo
- * @param {object} configFaseAtual - Configuração da fase atual
- * @returns {object} - Configuração do jogo Phaser
- */
 export const createGame = (parentElement, configFaseAtual) => ({
   type: Phaser.AUTO,
   width: configFaseAtual.mapa[0].length * TAMANHO_TILE,
@@ -78,6 +71,11 @@ export const createGame = (parentElement, configFaseAtual) => ({
 
           if (proximoTile === 0 || proximoTile === -1) {
             this.animarFalha();
+
+            if (this.gameInterpreter) {
+              this.gameInterpreter.stop();
+            }
+
           } else {
             const novaX = x * TAMANHO_TILE + TAMANHO_TILE / 2;
             const novaY = y * TAMANHO_TILE + TAMANHO_TILE / 2 - 6;
@@ -94,6 +92,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
               }
             });
           }
+
         };
 
         this.animarFalha = () => {
@@ -191,6 +190,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
 
         this.highlightBlock = (id) => {
           if (this.workspace) this.workspace.highlightBlock(id);
+
           this.highlightPause = true;
         };
 
@@ -268,7 +268,8 @@ export const createGame = (parentElement, configFaseAtual) => ({
       this.setupAllMethods();
 
       this.gameInterpreter = new GameInterpreter({
-        stepDelay: 20
+        stepDelay: 20,
+        pauseExec: true
       });
 
       this.mapa = configFaseAtual.mapa;
@@ -316,7 +317,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
         try {
           const result = await this.gameInterpreter.executeCode(
             codigo,
-            setupAutomatoAPI(this, { animationSpeed: VELOCIDADE_ANIMACAO })
+            setupAutomatoAPI(this, { animationSpeed: VELOCIDADE_ANIMACAO * 2 })
           );
           if (this.workspace) this.workspace.highlightBlock(null);
           this.handleExecutionResult(result);
@@ -333,7 +334,10 @@ export const createGame = (parentElement, configFaseAtual) => ({
         this.direcaoJogador = Direcao.LESTE;
         this.resultadoJogada = 'em_andamento';
         this.atualizarVisualJogador();
-        if (this.workspace) this.workspace.highlightBlock(null);
+
+        if (this.workspace) 
+          this.workspace.highlightBlock(null);
+        
         this.highlightPause = false;
       };
 

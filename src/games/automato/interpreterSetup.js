@@ -7,12 +7,9 @@ import { ApiHelpers } from '../../interpreters/ApiHelpers.js';
  * @returns {function} - Função de setup para o interpreter
  */
 export const setupAutomatoAPI = (scene, config = {}) => {
-  const animationDelay = config.animationSpeed || 100;
+  const animationDelay = config.animationSpeed;
   
   return (interpreter, globalScope) => {
-
-    // ===== COMANDOS DE MOVIMENTO (ASSÍNCRONOS) =====    
-
     ApiHelpers.registerFunction(
       interpreter, 
       globalScope, 
@@ -20,7 +17,7 @@ export const setupAutomatoAPI = (scene, config = {}) => {
       ApiHelpers.createActionWrapper(scene, 'moverParaFrente', animationDelay),
       true
     );
-
+    
     ApiHelpers.registerFunction(
       interpreter, 
       globalScope, 
@@ -37,8 +34,6 @@ export const setupAutomatoAPI = (scene, config = {}) => {
       true
     );
 
-    // ===== COMANDOS DE CONDIÇÃO (SÍNCRONOS) =====
-
     ApiHelpers.registerFunction(
       interpreter, 
       globalScope, 
@@ -54,9 +49,7 @@ export const setupAutomatoAPI = (scene, config = {}) => {
       ApiHelpers.createConditionWrapper(scene, 'haCaminho'),
       false
     );
-
-    // ===== FUNÇÕES ESPECIAIS =====
-    
+   
     ApiHelpers.registerFunction(
       interpreter, 
       globalScope, 
