@@ -7,6 +7,8 @@ import { setupAutomatoAPI } from './interpreterSetup.js';
 import tiles from './assets/tiles_pegman.png';
 import pegman from './assets/pegman.png';
 import marker from './assets/marker.png';
+import fail from './assets/fail_pegman.mp3';
+import win from './assets/win.mp3';
 
 const TAMANHO_TILE = 50;
 const PEGMAN_HEIGHT = 51;
@@ -37,6 +39,9 @@ export const createGame = (parentElement, configFaseAtual) => ({
         frameHeight: PEGMAN_HEIGHT,
         frameWidth: PEGMAN_WIDTH,
       });
+
+      this.load.audio('fail', fail);
+      this.load.audio('win', win);
     },
 
     init() {
@@ -70,6 +75,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
           const proximoTile = (this.mapa[y] && this.mapa[y][x] !== undefined) ? this.mapa[y][x] : -1;
 
           if (proximoTile === 0 || proximoTile === -1) {
+            this.fail.play();
             this.animarFalha();
 
             if (this.gameInterpreter) {
@@ -200,6 +206,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
             return;
           }
           if (this.chegouNoAlvo()) {
+            this.win.play();
             this.animarVitoria();
             setTimeout(() => gameEventBus.gameSuccess(), 800);
           } else {
@@ -261,6 +268,9 @@ export const createGame = (parentElement, configFaseAtual) => ({
           this.pegmanSprite.setOrigin(0.5);
           this.atualizarVisualJogador();
         };
+
+         this.win = this.sound.add('win', { loop: false, volume: 1 });
+         this.fail = this.sound.add('fail', { loop: false, volume: 0.5 });
       };
     },
 
@@ -307,6 +317,10 @@ export const createGame = (parentElement, configFaseAtual) => ({
       this.createPegmanSprite();
 
       const executarCodigo = async (codigo, workspace) => {
+        if (this.sound.context.state === 'suspended') { 
+          this.sound.context.resume(); 
+        }
+
         this.posicaoJogador = { ...this.posicaoInicial };
         this.direcaoJogador = Direcao.LESTE;
         this.resultadoJogada = 'em_andamento';

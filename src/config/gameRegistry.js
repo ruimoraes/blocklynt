@@ -1,5 +1,6 @@
 import { gameConfig as AUTOMATO_GAME_CONFIG } from '../games/automato/config.js';
 import { gameConfig as TURTLE_GAME_CONFIG } from '../games/turtle/config.js';
+import { gameConfig as SEMAFORO_GAME_CONFIG } from '../games/semaforo/config.js';
 
 const enhanceGameConfig = (baseConfig, metadata) => ({
   ...baseConfig,
@@ -39,7 +40,37 @@ export const GAMES_REGISTRY = {
       version: '2.0.0'
     }
   }),
-  turtle: enhanceGameConfig(TURTLE_GAME_CONFIG, {
+  semaforo: enhanceGameConfig(SEMAFORO_GAME_CONFIG, {
+    name: 'Semáforo',
+    icon: '🚦',
+    description: 'Controle o semáforo de carros e pedestres programando os blocos.',
+    category: 'Lógica',
+    difficulty: 'Iniciante',
+    estimatedTime: '10-20 min',
+    concepts: [
+      'Sequências',
+      'Eventos',
+      'Condicionais'
+    ],
+    route: '/games/semaforo',
+    component: 'SemaforoGame',
+    isActive: true,
+    enabled: true,
+    featured: false,
+    objectives: [
+      'Controlar semáforo de carros e pedestres',
+      'Usar eventos para interação',
+      'Aplicar lógica condicional para segurança'
+    ],
+    metadata: {
+      totalPhases: SEMAFORO_GAME_CONFIG.fases?.length || 3,
+      hasProgressTracking: true,
+      supportsMultipleUsers: false,
+      lastUpdated: '2025-08-13',
+      version: '1.0.0'
+    }
+  }),
+  turtle: enhanceGameConfig(TURTLE_GAME_CONFIG, {  
     name: 'Tartaruga',
     icon: '🐢',
     description: 'Aprenda programação com uma tartaruga que desenha no papel',

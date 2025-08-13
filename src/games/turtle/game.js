@@ -5,6 +5,8 @@ import { GameInterpreter } from '../../interpreters/GameInterpreter.js';
 import { setupTurtleAPI } from "./interpreterSetup.js";
 import turtleImg1 from './assets/1.png';
 import turtleImg2 from './assets/2.png';
+import win from './assets/win.mp3';
+import fail from './assets/fail.mp3';
 
 export const createGame = (parentElement, configFaseAtual) => ({
   type: Phaser.AUTO,
@@ -15,7 +17,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
     autoCenter: Phaser.Scale.CENTER_BOTH,
     zoom: 5
   },
-  backgroundColor: "#000000ff",
+  backgroundColor: "#171616",
   antialias: true,
   roundPixels: true,
   pixelArt: false,
@@ -25,10 +27,12 @@ export const createGame = (parentElement, configFaseAtual) => ({
     preload() {
       this.load.image('turtle1', turtleImg1);
       this.load.image('turtle2', turtleImg2);
+      this.load.audio('win', win);
+      this.load.audio('fail', fail);
     },
 
     init() {
-      this.executionSpeed = 50;
+      this.executionSpeed = 12.5;
 
       this.setExecutionSpeed = (speed) => {
         this.executionSpeed = Math.max(1, Math.min(100, speed));
@@ -56,11 +60,11 @@ export const createGame = (parentElement, configFaseAtual) => ({
         const sliderBg = this.add.rectangle(0, 8, this.sliderWidth, 12, 0x444444);
         controlsContainer.add(sliderBg);
 
-        this.sliderFill = this.add.rectangle(-this.sliderWidth / 2, 8, (this.executionSpeed / 100) * this.sliderWidth, 12, 0x00ff88);
+        this.sliderFill = this.add.rectangle(-this.sliderWidth / 2, 8, (this.executionSpeed / 100) * this.sliderWidth, 28, 0x00ff88);
         this.sliderFill.setOrigin(0, 0.5);
         controlsContainer.add(this.sliderFill);
 
-        this.sliderHandle = this.add.circle((this.executionSpeed / 100 - 0.5) * this.sliderWidth, 8, 8, 0xffffff);
+        this.sliderHandle = this.add.circle((this.executionSpeed / 100 - 0.5) * this.sliderWidth, 8, 16, 0xffffff);
         this.sliderHandle.setInteractive({ useHandCursor: true });
         this.sliderHandle.setStrokeStyle(2, 0x333333);
         controlsContainer.add(this.sliderHandle);
@@ -322,46 +326,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
             return false;
           }
         };
-
-        // this.compareDrawings = () => {
-        //   if (!this.compareColors(this.playerColors, this.solutionColors)) {
-        //     return false;
-        //   }
-
-        //   const playerCommands = this.playerGraphics.commandBuffer?.length || 0;
-        //   const solutionCommands = this.validationGraphics.commandBuffer?.length || 0;
-
-        //   const commandRatio = Math.min(playerCommands, solutionCommands) / Math.max(playerCommands, solutionCommands);
-
-        //   console.log(commandRatio)
-
-        //   if (commandRatio < 0.9) {
-        //     return false;
-        //   }
-
-        //   const playerBounds = this.calculateDrawingBounds(this.playerGraphics);
-        //   const solutionBounds = this.calculateDrawingBounds(this.validationGraphics);
-
-        //   if (playerBounds && solutionBounds) {
-        //     const playerArea = playerBounds.width * playerBounds.height;
-        //     const solutionArea = solutionBounds.width * solutionBounds.height;
-
-        //     if (playerArea > 0 && solutionArea > 0) {
-        //       const areaRatio = Math.min(playerArea, solutionArea) / Math.max(playerArea, solutionArea);
-
-        //       if (areaRatio >= 0.8) {
-        //         return true;
-        //       } else {
-        //         return false;
-        //       }
-        //     }
-        //   }
-
-        //   if (commandRatio > 0.95) {
-        //     return true;
-        //   }
-        //   return false;
-        // };
+      
         this.compareDrawings = () => {
           if (!this.compareColors(this.playerColors, this.solutionColors)) {
             console.log('❌ Cores diferentes');
@@ -454,11 +419,16 @@ export const createGame = (parentElement, configFaseAtual) => ({
           }
 
           if (this.checkAnswer()) {
+            this.win.play();
             gameEventBus.gameSuccess();
           } else {
+            this.fail.play();
             gameEventBus.gameFailure();
           }
         }
+      
+         this.win = this.sound.add('win', { loop: false, volume: 0.5 });
+         this.fail = this.sound.add('fail', { loop: false, volume: 0.5 });
       };
     },
 
@@ -498,7 +468,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
       const drawSolution = () => {
         this.activeGraphics = this.solutionGraphics;
         this.resetTurtle();
-        this.turtleState.penColour = 0x444444;
+        this.turtleState.penColour = 0xFFFFFF;
 
         const move = (d) => this._moveInstant(d);
         const turn = (a) => this._turnInstant(a);
