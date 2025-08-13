@@ -2,9 +2,9 @@ import { ApiHelpers } from '../../interpreters/ApiHelpers.js';
 
 export const setupTurtleAPI = (scene, config = {}) => {
     const getAnimationDelay = () => {
-    if (scene.executionSpeed >= 75) return 1;
-    if (scene.executionSpeed >= 50) return 2;
-    if (scene.executionSpeed >= 25) return 5;
+    if (scene.executionSpeed >= 75) return 2;
+    if (scene.executionSpeed >= 50) return 4;
+    if (scene.executionSpeed >= 25) return 10;
     return 10;
   };
 
