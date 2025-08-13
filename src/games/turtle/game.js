@@ -309,13 +309,14 @@ export const createGame = (parentElement, configFaseAtual) => ({
             this.resetTurtle();
             this.turtleState.penColour = 0xFFFFFF;
 
-            const move = (d) => this._moveInstant(d);
-            const turn = (a) => this._turnInstant(a);
-            const penDown = (s) => this.penDown(s);
-            const penColour = (c) => this.penColour(c);
+            const move = this._moveInstant;
+            const turn = this._turnInstant;
+            const penDown = this.penDown;
+            const penColour = this.penColour;
 
             try {
-              eval(configFaseAtual.solutionCode);
+              const fn = new Function('move', 'turn', 'penDown', 'penColour', configFaseAtual.solutionCode);
+              fn(move, turn, penDown, penColour);
             } catch (e) {
               return false;
             }
@@ -326,7 +327,7 @@ export const createGame = (parentElement, configFaseAtual) => ({
             return false;
           }
         };
-      
+
         this.compareDrawings = () => {
           if (!this.compareColors(this.playerColors, this.solutionColors)) {
             console.log('❌ Cores diferentes');
@@ -426,9 +427,9 @@ export const createGame = (parentElement, configFaseAtual) => ({
             gameEventBus.gameFailure();
           }
         }
-      
-         this.win = this.sound.add('win', { loop: false, volume: 0.5 });
-         this.fail = this.sound.add('fail', { loop: false, volume: 0.5 });
+
+        this.win = this.sound.add('win', { loop: false, volume: 0.5 });
+        this.fail = this.sound.add('fail', { loop: false, volume: 0.5 });
       };
     },
 
@@ -470,13 +471,14 @@ export const createGame = (parentElement, configFaseAtual) => ({
         this.resetTurtle();
         this.turtleState.penColour = 0xFFFFFF;
 
-        const move = (d) => this._moveInstant(d);
-        const turn = (a) => this._turnInstant(a);
-        const penDown = (s) => this.penDown(s);
-        const penColour = (c) => this.penColour(c);
+        const move = this._moveInstant;
+        const turn = this._turnInstant;
+        const penDown = this.penDown;
+        const penColour = this.penColour;
 
         try {
-          eval(configFaseAtual.solutionCode);
+          const fn = new Function('move', 'turn', 'penDown', 'penColour', configFaseAtual.solutionCode);
+          fn(move, turn, penDown, penColour);
         } catch (e) {
           console.error("Erro ao desenhar a solução:", e);
         }
