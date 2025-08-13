@@ -310,13 +310,20 @@ export const createGame = (parentElement, configFaseAtual) => ({
         this.workspace = workspace; 
         
         if (configFaseAtual.id > 1) { 
-          this.iniciarCicloSemaforo(); 
+          this.iniciarCicloSemaforo();          
         } 
         
         try { 
           await this.gameInterpreter.executeCode(codigo, setupSemaforoAPI(this)); 
           
-          if (this.workspace) this.workspace.highlightBlock(null); 
+          if (this.workspace) this.workspace.highlightBlock(null);
+
+          if (configFaseAtual.id === 1) {
+            gameEventBus.gameSuccess();
+          } else {
+            validarFase2();
+            validarFase3();
+          }
         } catch (error) { 
           this.resultadoJogada = 'falha'; 
           gameEventBus.gameFailure(); 
