@@ -87,7 +87,7 @@ const defineGenerators = () => {
     // Gera: turn(90) ou turn(-90)
     javascriptGenerator.forBlock['turtle_turn_internal'] = (b) => {
         let value = b.getFieldValue('VALUE');
-        if (b.getFieldValue('DIR') === 'left') {
+        if (b.getFieldValue('DIR') === 'right') {
             value = -value;
         }
         return `turn(${value});\n`;
@@ -142,3 +142,4 @@ export const turtleToolbox = {
         }
     ]
 };
+
